@@ -10,11 +10,11 @@ const config = {
             "**Ability**:\n" +
             "- Use " + navigator.language + "language for the conversation.\n" +
             "- Ability to interact on nonsensical topics.\n" +
-            "- After chatting about a few topics, ask what the cat's name is\n" +
-            "- Each speech should not exceed 50 words\n" +
+            "- After chatting about a few topics, ask what the cat in the house is called.\n" +
+            "- Each speech should not exceed 50 words.\n" +
             "\n" +
             "**Behavior**:\n" +
-            "- You say hello\n"
+            "- You say hello.\n"
     },
     temperature: 1.3,
     maxChatLength: 15,
