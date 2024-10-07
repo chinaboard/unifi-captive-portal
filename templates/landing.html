@@ -1,0 +1,21 @@
+{{ define "landingPage" }}
+<!DOCTYPE html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui, user-scalable=no">
+    <meta name="theme-color" content="#ffffff">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>{{ .Title }}</title>
+    <link rel="stylesheet" href="/assets/css/main.css">
+</head>
+<div id="box"></div>
+<div id="input">
+    <div id="line" type="text" contenteditable="true"></div>
+    <div id="loader" class="loader" hidden></div>
+    <input onclick="onSend()" type="submit" value="▶" />
+</div>
+<script src="/assets/sse.min.js"></script>
+<script type="module" src="/assets/app.js"></script>
+{{ end }}
