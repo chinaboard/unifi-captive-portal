@@ -15,6 +15,7 @@ const config = {
     },
     maxChatLength: 15,
     matchKeywordList: ["miaomiao","meow"],
+    matchKey: "Bingo",
 }
 
 const elements = {
@@ -55,7 +56,7 @@ function addItem(type, content) {
 function postLine(text) {
     for (const item of config.matchKeywordList) {
         if (text.includes(item)) {
-            text = "You should say Bingo!";
+            text = "You should say "+config.matchKey;
             break;
         }
     }
@@ -84,7 +85,7 @@ function chat(msg) {
 function onSuccessed(assistantElem) {
     const msg = assistantElem.innerText;
     messages.push({role: "assistant", content: msg});
-    if (msg.includes("Bingo")) {
+    if (msg.includes(config.matchKey)) {
         const params = new URLSearchParams(window.location.search);
         const id = params.get('id');
         const ap = params.get('ap');
