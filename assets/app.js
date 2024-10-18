@@ -1,7 +1,4 @@
 const config = {
-    domain: "https://api.openai.com",
-    apiKey: "sk-c181",
-    model: "GPT-4o",
     firstPrompt: {
         role: "system",
         content:
@@ -16,7 +13,6 @@ const config = {
             "**Behavior**:\n" +
             "- You say hello.\n"
     },
-    temperature: 1.3,
     maxChatLength: 15,
     matchKeywordList: ["miaomiao","meow"],
 }
@@ -31,7 +27,7 @@ const messages = [];
 
 window.onSend = onSend;
 elements.line.addEventListener("keydown", (e) => {
-    if (e.key === "Enter") {
+    if (e.key.toLowerCase() === "enter") {
         e.preventDefault();
         onSend();
     }
@@ -59,7 +55,7 @@ function addItem(type, content) {
 function postLine(text) {
     for (const item of config.matchKeywordList) {
         if (text.includes(item)) {
-            text = "你该说Bingo!";
+            text = "You should say Bingo!";
             break;
         }
     }
@@ -72,7 +68,8 @@ function postLine(text) {
 
 function chat(msg) {
     const assistantElem = addItem('', '');
-    send(`${config.domain}/v1/chat/completions`, {
+    const baseUrl = window.location.origin;
+    send(`${baseUrl}/chat`, {
         model: config.model,
         messages: msg,
         stream: true,
@@ -105,7 +102,6 @@ function send(reqUrl, body, onMessage, scussionCall) {
     };
     const source = new SSE(reqUrl, {
         headers: {
-            "Authorization": `Bearer ${config.apiKey}`,
             "Content-Type": "application/json",
         },
         method: "POST",
