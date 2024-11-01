@@ -1,0 +1,17 @@
+services:
+  protal:
+    image: chinaboard/unifi-captive-portal
+    container_name: portal
+    restart: unless-stopped
+    network_mode: host
+    environment:
+      - TZ=Asia/Shanghai
+      - UnifiURL=https://unifi:8443
+      - UnifiUsername=admin
+      - UnifiPassword=admin
+      - RedirectUrl=https://captive.apple.com/
+      - Minutes=600
+      - ApiKey=your_openai_api_key
+      - Model=gpt-3.5-turbo
+      - Domain=https://api.openai.com
+      - Temperature=0.7

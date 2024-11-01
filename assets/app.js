@@ -14,7 +14,7 @@ const config = {
             "- You say hello.\n"
     },
     maxChatLength: 15,
-    matchKeywordList: ["miaomiao","meow"],
+    matchKeywordList: ["miaomiao", "meow"],
     matchKey: "Bingo",
 }
 
@@ -56,7 +56,7 @@ function addItem(type, content) {
 function postLine(text) {
     for (const item of config.matchKeywordList) {
         if (text.includes(item)) {
-            text = "You should say "+config.matchKey;
+            text = "You should say " + config.matchKey;
             break;
         }
     }
