@@ -3,6 +3,7 @@ package openai
 import (
 	"encoding/json"
 	"github.com/chinaboard/unifi-captive-portal/pkg/options"
+	log "github.com/sirupsen/logrus"
 	"net/http"
 	"strings"
 )
@@ -43,6 +44,8 @@ func (c *Client) ChatHandler(w http.ResponseWriter, r *http.Request) {
 	req.Stream = true
 	req.Model = c.opt.Model
 	req.Temperature = c.opt.Temperature
+
+	log.Info(req.Messages)
 
 	body, err := json.Marshal(req)
 	if err != nil {
