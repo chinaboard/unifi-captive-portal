@@ -1,21 +1,31 @@
 {{ define "landingPage" }}
-    <!DOCTYPE html>
-
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-        <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui, user-scalable=no">
-        <meta name="theme-color" content="#ffffff">
-        <meta name="mobile-web-app-capable" content="yes">
-        <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-        <title>{{ .Title }}</title>
-        <link rel="stylesheet" href="/assets/css/main.css">
-    </head>
-    <div id="box"></div>
-    <div id="input">
-        <div id="line" type="text" contenteditable="true"></div>
-        <div id="loader" class="loader" hidden></div>
-        <input onclick="onSend()" type="submit" value="▶"/>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ .Title }}</title>
+    <link rel="stylesheet" href="/assets/styles.css">
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <h1>Welcome to OneOne's Home</h1>
+        </div>
+        <div class="chat-messages" id="chat-messages">
+            <!-- Messages will be added here dynamically -->
+        </div>
+        <div class="chat-input-container">
+            <input type="text" id="user-input" placeholder="Type your message here..." autocomplete="off">
+            <button id="send-button">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                </svg>
+            </button>
+        </div>
     </div>
-    <script src="/assets/sse.min.js"></script>
-    <script type="module" src="/assets/app.js"></script>
+    <script src="/assets/script.js"></script>
+</body>
+</html>
 {{ end }}
