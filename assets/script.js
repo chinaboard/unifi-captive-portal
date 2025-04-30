@@ -52,16 +52,23 @@ function addItem(content, className) {
 
 // Send message to AI and handle response
 function chat(msg) {
-    const assistantElem = addItem('', '');
-
+    let assistantElem = null;
     const baseUrl = window.location.origin;
 
     send(`${baseUrl}/chat`, {
         messages: msg,
     }, (data) => {
-        const msg = data.choices[0].delta || data.choices[0].message || {};
-        assistantElem.className = 'assistant';
-        assistantElem.innerText += msg.content || "";
+        const chunkMsg = data.choices[0].delta || data.choices[0].message || {};
+        if (!assistantElem) {
+            assistantElem = addItem('', 'assistant');
+            setTimeout(() => {
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }, 0);
+        }
+        assistantElem.innerText += chunkMsg.content || "";
+        setTimeout(() => {
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }, 0);
     }, () => onSuccessed(assistantElem));
 }
 

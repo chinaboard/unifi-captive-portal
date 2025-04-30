@@ -69,14 +69,12 @@ body {
     align-self: flex-end;
     background-color: #4a6fa5;
     color: white;
-    border-bottom-right-radius: 4px;
 }
 
 .assistant {
     align-self: flex-start;
     background-color: #f0f2f5;
     color: #333;
-    border-bottom-left-radius: 4px;
 }
 
 /* 输入区域 */
