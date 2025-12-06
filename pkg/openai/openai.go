@@ -69,7 +69,9 @@ func (c *Client) ChatHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	defer resp.Body.Close()
 
-	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Content-Type", "text/event-stream")
+	w.Header().Set("Cache-Control", "no-cache")
+	w.Header().Set("Connection", "keep-alive")
 	w.WriteHeader(resp.StatusCode)
 	flusher, ok := w.(http.Flusher)
 	if !ok {

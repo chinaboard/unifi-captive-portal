@@ -17,32 +17,43 @@ type Client struct {
 	baseUrl string
 }
 
-func NewClient(url string) *Client {
-	jar, _ := cookiejar.New(nil)
+func NewClient(url string) (*Client, error) {
+	jar, err := cookiejar.New(nil)
+	if err != nil {
+		return nil, fmt.Errorf("failed to create cookie jar: %w", err)
+	}
 	return &Client{
-		client: &http.Client{Jar: jar,
+		client: &http.Client{
+			Jar: jar,
 			Transport: &http.Transport{
 				TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
-			}},
+			},
+		},
 		baseUrl: strings.TrimSuffix(url, "/"),
-	}
+	}, nil
 }
 
-func (u *Client) do(path string, body any) (int, error) {
-	json, _ := json.Marshal(body)
-	path = strings.TrimPrefix(path, "/")
-
-	var resp *http.Response
-	var err error
-	if body == nil {
-		resp, err = u.client.Get(fmt.Sprintf("%s/%s", u.baseUrl, path))
-	} else {
-		resp, err = u.client.Post(fmt.Sprintf("%s/%s", u.baseUrl, path), "application/json; charset=utf-8", bytes.NewReader(json))
-	}
-
+func (u *Client) doGet(path string) (int, error) {
+	url := fmt.Sprintf("%s/%s", u.baseUrl, strings.TrimPrefix(path, "/"))
+	resp, err := u.client.Get(url)
 	if err != nil {
 		return http.StatusInternalServerError, err
 	}
+	defer resp.Body.Close()
+	return resp.StatusCode, nil
+}
+
+func (u *Client) doPost(path string, body any) (int, error) {
+	data, err := json.Marshal(body)
+	if err != nil {
+		return http.StatusInternalServerError, fmt.Errorf("failed to marshal body: %w", err)
+	}
+	url := fmt.Sprintf("%s/%s", u.baseUrl, strings.TrimPrefix(path, "/"))
+	resp, err := u.client.Post(url, "application/json; charset=utf-8", bytes.NewReader(data))
+	if err != nil {
+		return http.StatusInternalServerError, err
+	}
+	defer resp.Body.Close()
 	return resp.StatusCode, nil
 }
 
@@ -51,8 +62,7 @@ func (u *Client) Login(username, password string) error {
 		"username": username,
 		"password": password,
 	}
-	statusCode, err := u.do("/api/login", data)
-
+	statusCode, err := u.doPost("/api/login", data)
 	if err != nil {
 		return err
 	}
@@ -61,9 +71,8 @@ func (u *Client) Login(username, password string) error {
 	}).Info("login response")
 
 	if statusCode != 200 {
-		return errors.New("Controller returned non 200 status code")
+		return errors.New("controller returned non 200 status code")
 	}
-
 	return nil
 }
 
@@ -73,28 +82,21 @@ func (u *Client) AuthUser(deviceMac, site, minutes string) error {
 		"mac":     deviceMac,
 		"minutes": minutes,
 	}
-
-	statusCode, err := u.do(fmt.Sprintf("/api/s/%s/cmd/stamgr", site), data)
+	statusCode, err := u.doPost(fmt.Sprintf("/api/s/%s/cmd/stamgr", site), data)
 	if err != nil {
 		return err
 	}
-
 	log.WithFields(log.Fields{
 		"code": statusCode,
 	}).Info("authorize command response")
 
 	if statusCode != 200 {
-		return errors.New("Controller returned non 200 status code")
+		return errors.New("controller returned non 200 status code")
 	}
 	return nil
-
 }
 
 func (u *Client) Logout() error {
-	_, err := u.do(fmt.Sprintf("%s/logout", u.baseUrl), nil)
-	if err != nil {
-		return err
-	}
-
-	return nil
+	_, err := u.doGet("/api/logout")
+	return err
 }

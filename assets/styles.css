@@ -46,6 +46,7 @@ body {
     flex: 1;
     padding: 20px;
     overflow-y: auto;
+    scroll-behavior: smooth;
     display: flex;
     flex-direction: column;
     gap: 15px;

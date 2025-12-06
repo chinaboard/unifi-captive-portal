@@ -26,7 +26,10 @@ var PortalOpt *PortalOptions
 var OpenAiOpt *OpenAiOptions
 
 func init() {
-	temperature, _ := strconv.ParseFloat(env.Get("Temperature", "0.7"), 32)
+	temperature, err := strconv.ParseFloat(env.Get("Temperature", "0.7"), 64)
+	if err != nil {
+		temperature = 0.7
+	}
 	OpenAiOpt = &OpenAiOptions{
 		ApiKey:      env.Get("ApiKey", "sk-your-api-key"),
 		Domain:      env.Get("Domain", "https://api.openai.com"),

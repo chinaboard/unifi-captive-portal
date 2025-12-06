@@ -40,8 +40,13 @@ func (p *Portal) AuthHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	client := unifi.NewClient(p.opt.UnifiURL)
-	err := client.Login(p.opt.UnifiUsername, p.opt.UnifiPassword)
+	client, err := unifi.NewClient(p.opt.UnifiURL)
+	if err != nil {
+		log.Error(err.Error())
+		p.errorHandler(w, http.StatusInternalServerError)
+		return
+	}
+	err = client.Login(p.opt.UnifiUsername, p.opt.UnifiPassword)
 	if err != nil {
 		log.Error(err.Error())
 		p.errorHandler(w, http.StatusInternalServerError)
