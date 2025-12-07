@@ -166,17 +166,45 @@ userInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') sendMessage();
 });
 
-// Scroll input into view when focused (for mobile keyboard)
-function initMobileKeyboard() {
+// Dynamic viewport height for mobile keyboard
+const chatContainer = document.querySelector('.chat-container');
+let lastHeight = window.innerHeight;
+
+function updateViewportHeight() {
+    const currentHeight = window.innerHeight;
+
+    // Update container height to match actual viewport
+    chatContainer.style.height = currentHeight + 'px';
+
+    // If height decreased (keyboard opened), scroll to bottom
+    if (currentHeight < lastHeight) {
+        setTimeout(scrollToBottom, 50);
+    }
+
+    lastHeight = currentHeight;
+}
+
+function initViewport() {
+    // Set initial height
+    updateViewportHeight();
+
+    // Listen for resize (keyboard open/close)
+    window.addEventListener('resize', updateViewportHeight);
+
+    // Also update on focus (some browsers don't fire resize)
     userInput.addEventListener('focus', () => {
-        setTimeout(() => {
-            userInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
-        }, 300);
+        setTimeout(updateViewportHeight, 100);
+        setTimeout(updateViewportHeight, 300);
+        setTimeout(scrollToBottom, 400);
+    });
+
+    userInput.addEventListener('blur', () => {
+        setTimeout(updateViewportHeight, 100);
     });
 }
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
-    initMobileKeyboard();
+    initViewport();
     initChat();
 });
