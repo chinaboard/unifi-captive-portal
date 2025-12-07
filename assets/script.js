@@ -166,32 +166,17 @@ userInput.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') sendMessage();
 });
 
-// Handle mobile viewport height
-function setViewportHeight() {
-    const vh = window.visualViewport ? window.visualViewport.height * 0.01 : window.innerHeight * 0.01;
-    document.documentElement.style.setProperty('--vh', `${vh}px`);
-    setTimeout(scrollToBottom, 100);
-}
-
-function initViewport() {
-    setViewportHeight();
-
-    if (window.visualViewport) {
-        window.visualViewport.addEventListener('resize', setViewportHeight);
-    } else {
-        window.addEventListener('resize', setViewportHeight);
-    }
-
+// Scroll input into view when focused (for mobile keyboard)
+function initMobileKeyboard() {
     userInput.addEventListener('focus', () => {
         setTimeout(() => {
-            setViewportHeight();
-            scrollToBottom();
+            userInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }, 300);
     });
 }
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
-    initViewport();
+    initMobileKeyboard();
     initChat();
 });
